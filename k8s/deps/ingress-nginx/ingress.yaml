@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: henshi-ingress
+  namespace: henshi
+  labels:
+    name: henshi-ingress
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: henshi.neumanf.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: web-service
+            port: 
+              number: 80
+      - pathType: Prefix
+        path: /api/v1/card-collections
+        backend:
+          service:
+            name: flashcard-service-service
+            port: 
+              number: 80
+  - host: auth.henshi.neumanf.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: zitadel-service
+            port: 
+              number: 80

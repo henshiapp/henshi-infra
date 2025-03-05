@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flashcard-service-postgres
+  namespace: henshi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flashcard-service-postgres
+  template:
+    metadata:
+      labels:
+        app: flashcard-service-postgres
+    spec:
+      containers:
+        - name: flashcard-service-postgres
+          image: postgres:17-alpine
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: flashcard-secrets
+                  key: FLASHCARD_DATABASE_NAME
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: flashcard-secrets
+                  key: FLASHCARD_DATABASE_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: flashcard-secrets
+                  key: FLASHCARD_DATABASE_PASSWORD
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: flashcard-service-postgres-pvc

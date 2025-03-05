@@ -1,0 +1,128 @@
+services:
+    ##############
+    # Flashcards #
+    ##############
+    flashcard-service-postgres:
+        container_name: flashcard-service-postgres
+        image: postgres:17-alpine
+        restart: unless-stopped
+        healthcheck:
+            test: [ "CMD", "pg_isready", "-q", "-d", "flashcards", "-U", "postgres" ]
+            timeout: 45s
+            interval: 3s
+            retries: 10
+        environment:
+            POSTGRES_DB: ${FLASHCARD_DATABASE_NAME}
+            POSTGRES_USER: ${FLASHCARD_DATABASE_USER}
+            POSTGRES_PASSWORD: ${FLASHCARD_DATABASE_PASSWORD}
+            TZ: UTC
+            PGTZ: UTC
+        ports:
+            - '5432:5432'
+        volumes:
+            - flashcard-service-postgres:/var/lib/postgresql/data
+
+    flashcard-service:
+        image: maven:3.9.9-eclipse-temurin-21-alpine
+        command: mvn spring-boot:run
+        ports:
+            - 8081:8080
+        volumes:
+            - ../henshi-flashcard-service:/usr/src/app:rw
+        working_dir: /usr/src/app
+        environment:
+            SPRING_PROFILES_ACTIVE: dev
+            ALLOWED_ORIGINS: ${WEB_URL}
+            DATABASE_NAME: ${FLASHCARD_DATABASE_NAME}
+            DATABASE_HOST: flashcard-service-postgres
+            DATABASE_USERNAME: ${FLASHCARD_DATABASE_USER}
+            DATABASE_PASSWORD: ${FLASHCARD_DATABASE_PASSWORD}
+            OAUTH2_URI: ${AUTH_INSTROSPECT_URI}
+            OAUTH2_CLIENT_ID: ${AUTH_API_CLIENT_ID}
+            OAUTH2_CLIENT_SECRET: ${AUTH_API_CLIENT_SECRET}
+        depends_on:
+            - flashcard-service-postgres
+
+    ############
+    # Web      #
+    ############
+    web:
+        build:
+            context: ../henshi-web
+            dockerfile: development.Dockerfile
+        restart: unless-stopped
+        volumes:
+            - ../henshi-web:/app
+        ports:
+            - "3000:3000"
+        environment:
+            NODE_ENV: development
+            VITE_AUTH_AUTHORITY: ${AUTH_AUTHORITY}
+            VITE_AUTH_CLIENT_ID: ${AUTH_WEB_CLIENT_ID}
+            VITE_API_URL: ${WEB_API_URL}
+        depends_on:
+            - zitadel
+            - flashcard-service
+
+    ############
+    # Auth     #
+    ############
+    zitadel:
+        image: 'ghcr.io/zitadel/zitadel:latest'
+        command: 'start-from-init --masterkey "MasterkeyNeedsToHave32Characters" --config /zitadel.yaml --steps /zitadel.yaml'
+        environment:
+            ZITADEL_DATABASE_POSTGRES_HOST: zitadel-db
+            ZITADEL_DATABASE_POSTGRES_PORT: 5432
+            ZITADEL_DATABASE_POSTGRES_DATABASE: ${AUTH_DATABASE_NAME}
+            ZITADEL_DATABASE_POSTGRES_USER_USERNAME: ${AUTH_DATABASE_USER}
+            ZITADEL_DATABASE_POSTGRES_USER_PASSWORD: ${AUTH_DATABASE_PASSWORD}
+            ZITADEL_DATABASE_POSTGRES_USER_SSL_MODE: disable
+            ZITADEL_DATABASE_POSTGRES_ADMIN_USERNAME: ${AUTH_DATABASE_USER}
+            ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD: ${AUTH_DATABASE_PASSWORD}
+            ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE: disable
+            ZITADEL_EXTERNALDOMAIN: ${AUTH_DOMAIN}
+            ZITADEL_EXTERNALPORT: ${AUTH_PORT}
+            ZITADEL_EXTERNALSECURE: false
+            ZITADEL_TLS_ENABLED: false
+        depends_on:
+            zitadel-db:
+                condition: 'service_healthy'
+        ports:
+            - '8180:8080'
+
+    zitadel-db:
+        image: postgres:16-alpine
+        environment:
+            POSTGRES_USER: ${AUTH_DATABASE_USER}
+            POSTGRES_PASSWORD: ${AUTH_DATABASE_PASSWORD}
+            POSTGRES_DB: ${AUTH_DATABASE_NAME}
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+            interval: '10s'
+            timeout: '30s'
+            retries: 5
+            start_period: '20s'
+        volumes:
+            - zitadel-db:/var/lib/postgresql/data
+        ports:
+            - '5532:5432'
+
+    #########
+    # Nginx #
+    #########
+    nginx:
+        build:
+            context: ./nginx
+            dockerfile: development.Dockerfile
+        volumes:
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+        ports:
+            - "80:80"
+        depends_on:
+            - web
+            - flashcard-service
+        restart: unless-stopped
+
+volumes:
+    flashcard-service-postgres:
+    zitadel-db:

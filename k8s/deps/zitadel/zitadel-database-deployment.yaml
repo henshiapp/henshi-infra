@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zitadel-db
+  namespace: henshi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zitadel-db
+  template:
+    metadata:
+      labels:
+        app: zitadel-db
+    spec:
+      containers:
+        - name: zitadel-db
+          image: postgres:16-alpine
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: zitadel-secrets
+                  key: AUTH_DATABASE_NAME
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: zitadel-secrets
+                  key: AUTH_DATABASE_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: zitadel-secrets
+                  key: AUTH_DATABASE_PASSWORD
+          volumeMounts:
+            - name: zitadel-db-storage
+              mountPath: /var/lib/postgresql/data
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      volumes:
+        - name: zitadel-db-storage
+          persistentVolumeClaim:
+            claimName: zitadel-db-pvc

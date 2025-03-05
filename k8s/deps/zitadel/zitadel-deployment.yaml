@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zitadel
+  namespace: henshi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zitadel
+  template:
+    metadata:
+      labels:
+        app: zitadel
+    spec:
+      containers:
+        - name: zitadel
+          image: ghcr.io/zitadel/zitadel:v2.70.0
+          args: ["start-from-init", "--masterkey", "MasterkeyNeedsToHave32Characters", "--config", "/zitadel.yaml"]
+          env:
+            - name: ZITADEL_DATABASE_POSTGRES_HOST
+              value: "zitadel-database-service"
+            - name: ZITADEL_DATABASE_POSTGRES_PORT
+              value: "5432"
+            - name: ZITADEL_DATABASE_POSTGRES_USER_SSL_MODE
+              value: "disable"
+            - name: ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE
+              value: "disable"
+            - name: ZITADEL_EXTERNALSECURE
+              value: "false"
+            - name: ZITADEL_TLS_ENABLED
+              value: "false"
+            - name: ZITADEL_DATABASE_POSTGRES_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: zitadel-secrets
+                  key: AUTH_DATABASE_NAME
+            - name: ZITADEL_DATABASE_POSTGRES_USER_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: zitadel-secrets
+                  key: AUTH_DATABASE_USER
+            - name: ZITADEL_DATABASE_POSTGRES_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: zitadel-secrets
+                  key: AUTH_DATABASE_PASSWORD
+            - name: ZITADEL_DATABASE_POSTGRES_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: zitadel-secrets
+                  key: AUTH_DATABASE_USER
+            - name: ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: zitadel-secrets
+                  key: AUTH_DATABASE_PASSWORD
+            - name: ZITADEL_EXTERNALDOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: zitadel-config
+                  key: AUTH_DOMAIN
+            - name: ZITADEL_EXTERNALPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: zitadel-config
+                  key: AUTH_PORT
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

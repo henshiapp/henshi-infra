@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: zitadel-db-pv
+  labels:
+    app: zitadel-db
+    type: local
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/var/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zitadel-db-pvc
+  namespace: henshi
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi

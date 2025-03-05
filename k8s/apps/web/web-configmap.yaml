@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-config
+  namespace: henshi
+data:
+  WEB_URL: "https://henshi.neumanf.com"
+  WEB_API_URL: "https://henshi.neumanf.com"
