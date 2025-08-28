@@ -4,5 +4,4 @@ metadata:
   name: web-config
   namespace: henshi
 data:
-  WEB_URL: "https://henshi.neumanf.com"
-  WEB_API_URL: "https://henshi.neumanf.com"
+  URL: "https://henshi.neumanf.com"

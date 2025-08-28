@@ -2,8 +2,8 @@ services:
     ##############
     # API        #
     ##############
-    postgres:
-        container_name: postgres
+    api-database:
+        container_name: api-database
         image: postgres:17-alpine
         restart: unless-stopped
         healthcheck:
@@ -20,7 +20,7 @@ services:
         ports:
             - '5432:5432'
         volumes:
-            - postgres:/var/lib/postgresql/data
+            - api-database-data:/var/lib/postgresql/data
 
 volumes:
-    postgres:
+    api-database-data:

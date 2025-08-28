@@ -17,21 +17,29 @@ spec:
         - name: web
           image: ghcr.io/henshiapp/henshi-web:latest
           env:
-            - name: VITE_AUTH_AUTHORITY
-              valueFrom:
-                configMapKeyRef:
-                  name: zitadel-config
-                  key: AUTH_AUTHORITY
-            - name: VITE_AUTH_CLIENT_ID
+            - name: VITE_AUTH0_DOMAIN
               valueFrom:
                 secretKeyRef:
-                  name: zitadel-secrets
-                  key: AUTH_WEB_CLIENT_ID
+                  name: auth-secrets
+                  key: AUTHORITY
+
+            - name: VITE_AUTH0_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secrets
+                  key: CLIENT_ID
+
+            - name: VITE_AUTH0_AUDIENCE
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secrets
+                  key: AUDIENCE
+
             - name: VITE_API_URL
               valueFrom:
                 configMapKeyRef:
-                  name: web-config
-                  key: WEB_API_URL
+                  name: api-config
+                  key: URL
           resources:
             limits:
               memory: "512Mi"

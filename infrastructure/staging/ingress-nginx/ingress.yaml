@@ -5,8 +5,15 @@ metadata:
   namespace: henshi
   labels:
     name: henshi-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
 spec:
-  ingressClassName: traefik
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - henshi.neumanf.com
+    - api.henshi.neumanf.com
+    secretName: henshi-tls
   rules:
   - host: henshi.neumanf.com
     http:
@@ -18,20 +25,13 @@ spec:
             name: web-service
             port: 
               number: 80
-      - pathType: Prefix
-        path: /api/v1/card-collections
-        backend:
-          service:
-            name: flashcard-service-service
-            port: 
-              number: 80
-  - host: auth.henshi.neumanf.com
+  - host: api.henshi.neumanf.com
     http:
       paths:
       - pathType: Prefix
         path: /
         backend:
           service:
-            name: zitadel-service
+            name: api-service
             port: 
               number: 80

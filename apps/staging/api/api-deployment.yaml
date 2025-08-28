@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  namespace: henshi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/henshiapp/henshi-api:latest
+          env:
+            - name: ConnectionStrings__FlashcardsConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: api-database-secrets
+                  key: CONNECTION_STRING
+            
+            - name: AUTH0_AUTHORITY
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secrets
+                  key: AUTHORITY
+            
+            - name: AUTH0_AUDIENCE
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secrets
+                  key: AUDIENCE
+            
+            - name: Cors__Origins
+              valueFrom:
+                configMapKeyRef:
+                  name: web-config
+                  key: URL
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
