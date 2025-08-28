@@ -30,5 +30,10 @@ spec:
       retries: 3
   values:
     controller:
-      service:
-        type: LoadBalancer
+      ingressClassResource:
+        name: nginx
+        enabled: true
+        default: true
+        controllerValue: "k8s.io/ingress-nginx"
+        parameters: {}
+      ingressClass: nginx
