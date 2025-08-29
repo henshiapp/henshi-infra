@@ -1,0 +1,30 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: bitwarden
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: https://charts.bitwarden.com
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: sm-operator
+  namespace: sm-operator-system
+spec:
+  releaseName: sm-operator
+  interval: 5m
+  chart:
+    spec:
+      chart: sm-operator
+      version: 0.1.0
+      sourceRef:
+        kind: HelmRepository
+        name: bitwarden
+        namespace: flux-system
+  install:
+    createNamespace: true
+  upgrade:
+    remediation:
+      retries: 3
