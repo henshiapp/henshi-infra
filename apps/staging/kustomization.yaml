@@ -4,4 +4,7 @@ resources:
   - api
   - auth
   - web
+  - api-database
+  - cert-manager
+  - ingress
   - namespace.yaml
