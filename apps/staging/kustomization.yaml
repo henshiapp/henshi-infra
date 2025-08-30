@@ -7,4 +7,3 @@ resources:
   - api-database
   - cert-manager
   - ingress
-  - namespace.yaml
