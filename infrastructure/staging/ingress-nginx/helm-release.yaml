@@ -23,8 +23,11 @@ spec:
         kind: HelmRepository
         name: ingress-nginx
         namespace: flux-system
+  install:
+    createNamespace: true
+    timeout: 1h
   upgrade:
-    timeout: 15m
+    timeout: 1h
     remediation:
       retries: 3
   values:
