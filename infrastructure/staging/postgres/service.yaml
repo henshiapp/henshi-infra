@@ -4,9 +4,7 @@ metadata:
   name: external-postgres
   namespace: henshi
 spec:
-  type: ClusterIP
   ports:
     - port: 5432
+      protocol: TCP
       targetPort: 5432
-  externalIPs:
-    - 212.56.35.49

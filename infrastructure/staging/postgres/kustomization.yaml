@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: henshi
 resources:
   - service.yaml
+  - endpoints.yaml
