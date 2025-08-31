@@ -39,3 +39,6 @@ spec:
         controllerValue: "k8s.io/ingress-nginx"
         parameters: {}
       ingressClass: nginx
+      service:
+        type: LoadBalancer
+        loadBalancerIP: 212.56.35.49
