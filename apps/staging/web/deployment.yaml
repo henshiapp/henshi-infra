@@ -21,19 +21,19 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: auth-secrets
-                  key: AUTHORITY
+                  key: AUTH0_AUTHORITY
 
             - name: VITE_AUTH0_CLIENT_ID
               valueFrom:
                 secretKeyRef:
                   name: auth-secrets
-                  key: CLIENT_ID
+                  key: AUTH0_CLIENT_ID
 
             - name: VITE_AUTH0_AUDIENCE
               valueFrom:
                 secretKeyRef:
                   name: auth-secrets
-                  key: AUDIENCE
+                  key: AUTH0_AUDIENCE
 
             - name: VITE_API_URL
               valueFrom:

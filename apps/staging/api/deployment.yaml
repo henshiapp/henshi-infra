@@ -21,19 +21,19 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: api-database-secrets
-                  key: CONNECTION_STRING
+                  key: POSTGRES_CONNECTION_STRING
             
             - name: AUTH0_AUTHORITY
               valueFrom:
                 secretKeyRef:
                   name: auth-secrets
-                  key: AUTHORITY
+                  key: AUTH0_AUTHORITY
             
             - name: AUTH0_AUDIENCE
               valueFrom:
                 secretKeyRef:
                   name: auth-secrets
-                  key: AUDIENCE
+                  key: AUTH0_AUDIENCE
             
             - name: Cors__Origins
               valueFrom:
