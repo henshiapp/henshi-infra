@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: ghcr.io/henshiapp/henshi-web:550ca352b6dee067a2221c1d28d1ab4f4ae970fb
+          image: ghcr.io/henshiapp/henshi-web:108f5a9aee89932fd427d66bb16afe1455b359da
           env:
             - name: VITE_AUTH0_DOMAIN
               valueFrom:
