@@ -21,7 +21,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: auth-secrets
-                  key: AUTH0_AUTHORITY
+                  key: AUTH0_DOMAIN
 
             - name: HENSHI_ENV_AUTH0_CLIENT_ID
               valueFrom:

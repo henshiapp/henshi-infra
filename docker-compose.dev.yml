@@ -27,7 +27,7 @@ services:
         restart: unless-stopped
         environment:
             ConnectionStrings__FlashcardsConnectionString: ${DATABASE_CONNECTION_STRING}
-            AUTH0_AUTHORITY: ${AUTH0_AUTHORITY}
+            AUTH0_DOMAIN: ${AUTH0_DOMAIN}
             AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
             Cors__Origins: ${WEB_URL}
         depends_on:
@@ -42,7 +42,7 @@ services:
             dockerfile: Dockerfile
         restart: unless-stopped
         environment:
-            VITE_AUTH0_DOMAIN: ${AUTH0_AUTHORITY}
+            VITE_AUTH0_DOMAIN: ${AUTH0_DOMAIN}
             VITE_AUTH0_CLIENT_ID: ${AUTH0_CLIENT_ID}
             VITE_AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
             VITE_API_URL: ${API_URL}

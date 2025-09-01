@@ -22,13 +22,13 @@ spec:
                 secretKeyRef:
                   name: api-database-secrets
                   key: POSTGRES_CONNECTION_STRING
-            
-            - name: AUTH0_AUTHORITY
+
+            - name: AUTH0_DOMAIN
               valueFrom:
                 secretKeyRef:
                   name: auth-secrets
-                  key: AUTH0_AUTHORITY
-            
+                  key: AUTH0_DOMAIN
+
             - name: AUTH0_AUDIENCE
               valueFrom:
                 secretKeyRef:
@@ -40,7 +40,7 @@ spec:
                 secretKeyRef:
                   name: api-secrets
                   key: DATABASE_ENCRYPTION_KEY
-            
+
             - name: Cors__Origins
               valueFrom:
                 configMapKeyRef:
