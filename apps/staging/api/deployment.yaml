@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: ghcr.io/henshiapp/henshi-api:7c5413dc21bc9e7887fcdf1e73829c69c33ee913
+          image: ghcr.io/henshiapp/henshi-api:80d50889c914140165055c37a6df60348720dac0
           env:
             - name: ConnectionStrings__FlashcardsConnectionString
               valueFrom:
