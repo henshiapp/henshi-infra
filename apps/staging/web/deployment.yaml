@@ -17,25 +17,25 @@ spec:
         - name: web
           image: ghcr.io/henshiapp/henshi-web:108f5a9aee89932fd427d66bb16afe1455b359da
           env:
-            - name: VITE_AUTH0_DOMAIN
+            - name: HENSHI_ENV_AUTH0_DOMAIN
               valueFrom:
                 secretKeyRef:
                   name: auth-secrets
                   key: AUTH0_AUTHORITY
 
-            - name: VITE_AUTH0_CLIENT_ID
+            - name: HENSHI_ENV_AUTH0_CLIENT_ID
               valueFrom:
                 secretKeyRef:
                   name: auth-secrets
                   key: AUTH0_CLIENT_ID
 
-            - name: VITE_AUTH0_AUDIENCE
+            - name: HENSHI_ENV_AUTH0_AUDIENCE
               valueFrom:
                 secretKeyRef:
                   name: auth-secrets
                   key: AUTH0_AUDIENCE
 
-            - name: VITE_API_URL
+            - name: HENSHI_ENV_API_URL
               valueFrom:
                 configMapKeyRef:
                   name: api-config
