@@ -34,6 +34,12 @@ spec:
                 secretKeyRef:
                   name: auth-secrets
                   key: AUTH0_AUDIENCE
+
+            - name: DATABASE_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: DATABASE_ENCRYPTION_KEY
             
             - name: Cors__Origins
               valueFrom:
