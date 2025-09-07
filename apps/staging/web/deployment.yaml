@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: ghcr.io/henshiapp/henshi-web:7269e330be3cebde0dff488bddb66570acc032c9
+          image: ghcr.io/henshiapp/henshi-web:ae236d18861003649866cf97956d02a872d9d755
           env:
             - name: HENSHI_ENV_AUTH0_DOMAIN
               valueFrom:
