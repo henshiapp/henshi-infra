@@ -4,4 +4,4 @@ metadata:
   name: api-config
   namespace: henshi
 data:
-  URL: "https://api.henshi.neumanf.com/api"
+  URL: "https://api.henshi.neumanf.com"
