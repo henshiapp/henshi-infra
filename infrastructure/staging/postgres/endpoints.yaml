@@ -5,6 +5,6 @@ metadata:
   namespace: henshi
 subsets:
   - addresses:
-      - ip: 212.56.35.49
+      - ip: 158.220.122.57
     ports:
       - port: 5432
