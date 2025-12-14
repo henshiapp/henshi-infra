@@ -42,3 +42,5 @@ spec:
       service:
         type: LoadBalancer
         loadBalancerIP: 158.220.122.57
+      admissionWebhooks:
+        enabled: false
